@@ -1,4 +1,11 @@
+import 'package:clima/services/networking.dart';
+import 'package:clima/utilities/constants.dart';
+
+import 'location.dart';
+
 class WeatherModel {
+  String units = '&units=metric';
+
   String getWeatherIcon(int condition) {
     if (condition < 300) {
       return '🌩';
@@ -29,5 +36,22 @@ class WeatherModel {
     } else {
       return 'Bring a 🧥 just in case';
     }
+  }
+
+  Future<dynamic> getLocation() async {
+    Location location = Location();
+
+    await location.getCurrentLocation();
+
+    NetworkingHelper networkingHelper = NetworkingHelper(
+        '$kOpenWeatherURL?lat=${location.latitude}&lon=${location.longitude}&appid=$kApiKey$units');
+
+    return await networkingHelper.getData();
+
+    // Navigator.push(context, MaterialPageRoute(builder: (context) {
+    //   return LocationScreen(
+    //     locationWeather: weatherData,
+    //   );
+    // }));
   }
 }

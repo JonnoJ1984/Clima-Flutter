@@ -14,6 +14,7 @@ class LocationScreen extends StatefulWidget {
 class _LocationScreenState extends State<LocationScreen> {
   int temperature;
   int condition;
+  String weatherMessage;
   String cityName;
 
   final WeatherModel weatherModel = WeatherModel();
@@ -26,12 +27,22 @@ class _LocationScreenState extends State<LocationScreen> {
   }
 
   void updateUI(dynamic weatherData) {
-    temperature = (weatherData['main']['temp']).round();
-    print(temperature);
-    condition = weatherData['weather'][0]['id'];
-    print(condition);
-    cityName = weatherData['name'];
-    print(cityName);
+    setState(() {
+      if (weatherData == null) {
+        temperature = 0;
+        condition = 0;
+        weatherMessage = 'Error';
+        cityName = 'Unknown';
+      } else {
+        temperature = (weatherData['main']['temp']).round();
+        print(temperature);
+        condition = weatherData['weather'][0]['id'];
+        print(condition);
+        weatherMessage = weatherModel.getMessage(temperature);
+        cityName = weatherData['name'];
+        print(cityName);
+      }
+    });
   }
 
   @override
@@ -56,7 +67,10 @@ class _LocationScreenState extends State<LocationScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   FlatButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      var weatherData = await weatherModel.getLocation();
+                      updateUI(weatherData);
+                    },
                     child: Icon(
                       Icons.near_me,
                       size: 50.0,
@@ -89,8 +103,8 @@ class _LocationScreenState extends State<LocationScreen> {
               Padding(
                 padding: EdgeInsets.only(right: 15.0),
                 child: Text(
-                  weatherModel.getMessage(temperature) + ' in $cityName',
-                  textAlign: TextAlign.right,
+                  '$weatherMessage in $cityName',
+                  textAlign: TextAlign.center,
                   style: kMessageTextStyle,
                 ),
               ),

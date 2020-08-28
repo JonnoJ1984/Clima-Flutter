@@ -20,10 +20,3 @@ class Location {
     }
   }
 }
-
-// double temp = weatherData['main']['temp'];
-//     //print(temp);
-//     int conditionID = weatherData['weather'][0]['id'];
-//     //print(conditionID);
-//     String cityName = weatherData['name'];
-//     //print(cityName);

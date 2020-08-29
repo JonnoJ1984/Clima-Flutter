@@ -6,6 +6,14 @@ import 'location.dart';
 class WeatherModel {
   String units = '&units=metric';
 
+  Future<dynamic> getCityWeather(String cityName) async {
+    var url = '$kOpenWeatherURL?q=$cityName&appid=$kApiKey$units';
+    NetworkingHelper networkingHelper = NetworkingHelper(url);
+
+    var weatherData = await networkingHelper.getData();
+    return weatherData;
+  }
+
   String getWeatherIcon(int condition) {
     if (condition < 300) {
       return '🌩';
